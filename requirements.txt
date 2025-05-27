@@ -1,0 +1,8 @@
+pandas
+plotly
+pyyaml
+streamlit
+streamlit-autorefresh
+streamlit-plotly-events
+psutil
+geoip2

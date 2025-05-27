@@ -1,0 +1,29 @@
+log_sources:
+  - dmesg
+  - journalctl
+
+journalctl_lines: 1000
+
+keywords:
+  - error
+  - fail
+  - warn
+  - timeout
+  - reset
+  - corrupt
+  - overrun
+  - critical
+  - bad
+
+networks:
+  protocols:
+    ssh: 22
+    http: 80
+    https: 443
+    dns: 53
+    smtp: 25
+    streamlit: 8501
+  interfaces:
+    - eth0
+    - wlan0
+    - lo
