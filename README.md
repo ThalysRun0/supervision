@@ -20,5 +20,5 @@ echo "$USER ALL=(ALL) NOPASSWD: $ABS_PATH" | sudo tee /etc/sudoers.d/read_power
 sudo visudo -cf /etc/sudoers.d/read_power
 # > etc/sudoers.d/read_power: parsed OK
 
-python streamlit run app.py
+streamlit run app.py
 ```
