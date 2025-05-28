@@ -139,7 +139,6 @@ def extract_power():
     e2 = read_rapl_energy_uj()
     if e1 and e2:
         power_watts = (e2 - e1) / 1_000_000  # µJ → W·s/s → W
-        print(power_watts)
         data = pd.DataFrame([{
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 
             "watts": round(power_watts, 2),

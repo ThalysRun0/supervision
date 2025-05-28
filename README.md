@@ -22,3 +22,6 @@ sudo visudo -cf /etc/sudoers.d/read_power
 
 streamlit run app.py
 ```
+
+### TODO
+- **pending** delete warning message about graph for missing label  
