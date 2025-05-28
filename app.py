@@ -76,7 +76,7 @@ if st.session_state["trigger_reload"]:
 
 col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
 with col1:
-    if st.button("Persistence"):
+    if st.button(label="Persist"):
         timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
         output_path = os.path.join("logs", f"rapport_{timestamp_str}.csv")
         events_data.sort_values("timestamp").to_csv(output_path, index=False)
@@ -85,12 +85,12 @@ with col1:
     else:
         st.session_state["trigger_reload"] = False
 
-    mode = st.radio("", ["🌀 Live", "📂 Load past"])
+    mode = st.radio(label="mode", options=["🌀 Live", "📂 Load past"], label_visibility="hidden")
     csv_files = sorted([f for f in os.listdir("logs") if f.startswith("rapport_") and f.endswith(".csv")], reverse=True)
     clicked_time = None
 
     if mode == "🌀 Live":
-        refresh_interval = st.slider("⏱ Automatic refresh (minutes)", 0, 30, 5)
+        refresh_interval = st.slider(label="⏱ Automatic refresh (minutes)", min_value=0, max_value=30, value=5)
         if refresh_interval > 0:
             count = st_autorefresh(interval=refresh_interval * 60 * 1000, key="auto-refresh")
             st.session_state["last_count"] = count

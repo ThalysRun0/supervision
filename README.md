@@ -25,3 +25,5 @@ streamlit run app.py
 
 ### TODO
 - **pending** delete warning message about graph for missing label  
+2025.05.28 - this was not in graphes but in radio button  
+I let you find the way to detect it ^^  

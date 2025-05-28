@@ -14,7 +14,9 @@ def generate_plot(df):
 
 def generate_proc_plot(df):
     df_exploded = df.explode("category").dropna(subset=["category"])
-    fig = px.histogram(df_exploded, x="category", color="category", title="Process types")
+    fig = px.histogram(df_exploded, x="category", color="category", 
+                       title="Process types",
+                       labels={"category": "Categories"})
     fig.update_layout(bargap=0.2, xaxis_title="Categories", yaxis_title="Process count")
     st.plotly_chart(fig, use_container_width=True)
 
