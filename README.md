@@ -1,5 +1,11 @@
 # supervision
-Monitoring
+Monitoring for linux system
+
+## View with streamlit & plotly
+![view on CPU consumption](docs/img/CPU_watts.png)
+![view on active network connexions](docs/img/networks.png)
+![view categorized processes](docs/img/processus.png)
+
 ## install
 
 git clone \<me\>
@@ -24,6 +30,6 @@ streamlit run app.py
 ```
 
 ### TODO
-- **pending** delete warning message about graph for missing label  
+- **done** delete warning message about graph for missing label  
 2025.05.28 - this was not in graphes but in radio button  
 I let you find the way to detect it ^^  
