@@ -15,10 +15,26 @@ def generate_plot(df):
 def generate_proc_plot(df):
     df_exploded = df.explode("category").dropna(subset=["category"])
     fig = px.histogram(df_exploded, x="category", color="category", 
-                       title="Process types",
+#                       title="Process types",
                        labels={"category": "Categories"})
     fig.update_layout(bargap=0.2, xaxis_title="Categories", yaxis_title="Process count")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig.update_layout(showlegend=False), use_container_width=True)
+
+def generate_irq_proc(df, top_n=10):
+    # Create heatmap with Plotly
+    num_cpus = df['num_cpu'].max()
+    df_top = df.sort_values("num_cpu", ascending=False).head(top_n)
+    df_melted = df_top.melt(id_vars=["device"], value_vars=[f"CPU{i}" for i in range(num_cpus)],
+                            var_name="CPU", value_name="Irq")
+    pivot_df = df_melted.pivot(index="device", columns="CPU", values="Irq")
+    pivot_rotated = pivot_df.T
+    fig = px.imshow(
+        pivot_rotated,
+        color_continuous_scale="Viridis",
+        labels={"color": "Irq"},
+#        title="Distribution by CPU and Device",
+    )
+    st.plotly_chart(fig.update_layout(showlegend=False), use_container_width=True)
 
 def generate_power_plot(df):
     if not df.empty:
@@ -29,7 +45,7 @@ def generate_power_plot(df):
             markers=True,
             labels={"timestamp": "Hour", "watts": "Watts"}
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig.update_layout(showlegend=False), use_container_width=True)
     else:
         st.info("CPU data consumption not yet available")
 
@@ -57,6 +73,6 @@ def generate_network_plot(df):
 #            legend=dict(x=0, y=1.1, orientation="h"),
 #            margin=dict(t=40, b=20)
 #        )
-        st.plotly_chart(fig, use_container_width=False)
+        st.plotly_chart(fig.update_layout(showlegend=False), use_container_width=False)
     else:
         st.info("No active connexion regarding YAML parameters")

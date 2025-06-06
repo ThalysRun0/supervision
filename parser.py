@@ -76,6 +76,7 @@ def parse_logs(logs, source, regex) -> pd.DataFrame:
                 'source': source,
                 'message': line
             }])], ignore_index=True)
+    
     return data
 
 def extract_dmesg():
@@ -143,6 +144,7 @@ def extract_power():
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 
             "watts": round(power_watts, 2),
         }])
+    
     return data
 
 def get_interface_for_ip(ip):
@@ -151,6 +153,38 @@ def get_interface_for_ip(ip):
             if addr.family == socket.AF_INET and addr.address == ip:
                 return iface
     return "other"
+
+def extract_irq_proc() -> pd.DataFrame:
+    data = pd.DataFrame()
+    with open('/proc/interrupts', 'r') as f:
+        lines = f.readlines()
+
+    # Extraire les noms des CPUs depuis la 1re ligne
+    cpus = lines[0].split()
+    num_cpus = len(cpus)
+
+    for line in lines[1:]:
+        # Skip lignes non standards (comme NMI, LOC, etc.)
+        if not re.match(r"^\s*\d+:.*", line):
+            continue
+
+        parts = line.split()
+        irq = parts[0].strip(":")
+        cpu_counts = parts[1:1+num_cpus]
+        device = " ".join(parts[1+num_cpus:])
+        counts = [int(x) if x.isdigit() else 0 for x in cpu_counts]
+        #total = sum(int(x) for x in counts if x.isdigit())
+        tmp_data = pd.DataFrame([{
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "irq": irq,
+            "device": device,
+            **{f"CPU{i}": counts[i] for i in range(num_cpus)},
+        #    "total": total,
+            "num_cpu": num_cpus,
+        }])
+        data = pd.concat([data, tmp_data], ignore_index=True)
+
+    return data
 
 def extract_protocol_connections(interfaces, protocol_ports) -> pd.DataFrame:
     data = pd.DataFrame()

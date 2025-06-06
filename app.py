@@ -6,8 +6,8 @@ import pandas as pd
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
-from parser import extract_logs, extract_protocol_connections, extract_proc, categorize_process, extract_power
-from visualizer import generate_plot, generate_power_plot, generate_network_plot, generate_proc_plot
+from parser import extract_logs, extract_protocol_connections, extract_proc, categorize_process, extract_power, extract_irq_proc
+from visualizer import generate_plot, generate_power_plot, generate_network_plot, generate_proc_plot, generate_irq_proc
 
 timestamp = datetime.now().strftime("%H:%M:%S")
 st.session_state["trigger_reload"] = True
@@ -64,6 +64,16 @@ if st.session_state["trigger_reload"]:
         #st.session_state["proc_log"] = st.session_state["proc_log"].tail(-20)
         procs_data = st.session_state["proc_log"]#[-1]['data']
 
+irqs_data = pd.DataFrame()
+if st.session_state["trigger_reload"]:
+#    print("NETWORK ---------------------------------------------------------------------------")
+    irqs = extract_irq_proc()
+    if len(irqs) > 0:
+        #st.session_state["irq_log"] = pd.concat([st.session_state["irq_log"], irqs], ignore_index=True) #.append({"timestamp": timestamp, "data": connexions})
+        st.session_state["irq_log"] = irqs
+        #st.session_state["irq_log"] = st.session_state["irq_log"].tail(-20)
+        irqs_data = st.session_state["irq_log"]#[-1]['data']
+
 power_data = pd.DataFrame()
 if st.session_state["trigger_reload"]:
 #    print("POWER ---------------------------------------------------------------------------")
@@ -74,7 +84,8 @@ if st.session_state["trigger_reload"]:
         st.session_state["power_log"] = st.session_state["power_log"].tail(20)
         power_data = st.session_state["power_log"]#[-1]['data']
 
-col1, col2, col3, col4 = st.columns([1, 1, 1, 1])
+
+col1, col2, col3, col4, col5 = st.columns([1, 1, 1, 1, 1])
 with col1:
     if st.button(label="Persist"):
         timestamp_str = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -132,6 +143,10 @@ with col4:
         generate_proc_plot(procs_data)
     with st.expander("List", expanded=False):
         st.dataframe(procs_data)
+
+with col5:
+    with st.expander("🧭 IRQs heatmap", expanded=True):
+        generate_irq_proc(irqs_data)
 
 if st.session_state.get("auto_refresh_trigger", False):
     st.session_state["trigger_reload"] = True
