@@ -12,8 +12,8 @@ git clone \<me\>
 
 ```bash
 cd supervision
-python<version> -m venv supervision
-source supervision/bin/activate
+python<version> -m venv supervision-venv
+source supervision-venv/bin/activate
 
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
