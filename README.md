@@ -11,13 +11,13 @@ Monitoring for linux system
 git clone \<me\>
 
 ```bash
+cd supervision
 python<version> -m venv supervision
 source supervision/bin/activate
 
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 
-cd supervision
 # allow power read
 sudo chmod +x read_power.sh
 ABS_PATH=$(realpath read_power.sh)
